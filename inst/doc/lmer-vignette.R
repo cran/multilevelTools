@@ -1,8 +1,7 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
-)
+  comment = "#>")
 
 ## ----setup--------------------------------------------------------------------
 
@@ -13,6 +12,7 @@ library(lmerTest)
 library(extraoperators)
 library(JWileymisc)
 library(multilevelTools)
+library(data.table)
 
 ## load some sample data for examples
 data(aces_daily, package = "JWileymisc")
@@ -80,7 +80,6 @@ plot(testDistribution(tmp[["STRESS by residual"]]$X,
      varlab = "Within Person STRESS")
 
 
-
 ## -----------------------------------------------------------------------------
 
 strictControl <- lmerControl(optCtrl = list(
@@ -92,7 +91,7 @@ m <- lmer(NegAff ~ STRESS + (1 + STRESS | UserID),
           data = aces_daily, control = strictControl)
 
 
-## ---- fig.width = 7, fig.height = 10------------------------------------------
+## ----fig.width = 7, fig.height = 10-------------------------------------------
 
 md <- modelDiagnostics(m, ev.perc = .001)
 
@@ -109,7 +108,7 @@ head(mvextreme)
 unique(mvextreme$UserID)
 
 
-## ---- fig.width = 7, fig.height = 10------------------------------------------
+## ----fig.width = 7, fig.height = 10-------------------------------------------
 
 m2 <- update(m, data = subset(aces_daily,
   UserID %!in% unique(mvextreme$UserID)))
@@ -124,7 +123,7 @@ mvextreme2 <- subset(md2$extremeValues,
 unique(mvextreme2$UserID)
 
 
-## ---- fig.width = 7, fig.height = 10------------------------------------------
+## ----fig.width = 7, fig.height = 10-------------------------------------------
 
 m3 <- update(m, data = subset(aces_daily,
   UserID %!in% c(unique(mvextreme$UserID), unique(mvextreme2$UserID))))
@@ -172,4 +171,81 @@ mt <- modelTest(m)
 
 APAStyler(list(Original = mt, `Outliers Removed` = mt3))
 
+## -----------------------------------------------------------------------------
+d <- as.data.table(aces_daily)[!is.na(SES_1) & !is.na(BornAUS)]
+d[, SEScat := factor(SES_1)]
+d[, BornAUScat := factor(BornAUS)]
+
+m.noint <- lmer(PosAff ~ BornAUScat + SEScat + (1 | UserID), data = d)
+
+## ----echo = FALSE, results = "asis"-------------------------------------------
+knitr::kable(fixef(m.noint), caption = "no interaction model fixed effects")
+
+## -----------------------------------------------------------------------------
+m.nointdrop <- update(m.noint, . ~ . - SEScat)
+
+## ----echo = FALSE, results = "asis"-------------------------------------------
+knitr::kable(
+  fixef(m.nointdrop),
+  caption = "no interaction model fixed effects after dropping a predictor")
+
+## ----results = "asis"---------------------------------------------------------
+knitr::kable(
+  t(modelCompare(m.nointdrop, m.noint)$Comparison),
+  caption = "model comparison")
+
+## ----results = "asis"---------------------------------------------------------
+knitr::kable(APAStyler(modelTest(m.noint)))
+
+## -----------------------------------------------------------------------------
+m.int <- lmer(PosAff ~ BornAUScat * SEScat + (1 | UserID), data = d)
+
+## ----echo = FALSE, results = "asis"-------------------------------------------
+knitr::kable(fixef(m.int), caption = "interaction model fixed effects")
+
+## -----------------------------------------------------------------------------
+m.intdrop <- update(m.int, . ~ . - SEScat)
+
+## ----echo = FALSE, results = "asis"-------------------------------------------
+knitr::kable(
+  fixef(m.intdrop),
+  caption = "interaction model fixed effects after dropping a predictor")
+
+## ----eval = FALSE-------------------------------------------------------------
+# modelCompare(m.intdrop, m.int)
+
+## -----------------------------------------------------------------------------
+logLik(m.int)
+logLik(m.intdrop)
+
+## ----results = "asis"---------------------------------------------------------
+knitr::kable(APAStyler(modelTest(m.int)))
+
+## -----------------------------------------------------------------------------
+## manually dummy code
+d[, SEScat5 := fifelse(SES_1 == 5, 1, 0)]
+d[, SEScat6 := fifelse(SES_1 == 6, 1, 0)]
+d[, SEScat7 := fifelse(SES_1 == 7, 1, 0)]
+d[, SEScat8 := fifelse(SES_1 == 8, 1, 0)]
+
+## interaction model
+m.intman <- lmer(PosAff ~ BornAUS * (SEScat5 + SEScat6 + SEScat7 + SEScat8) +
+                   (1 | UserID), data = d)
+
+## drop just the simple main effects of SEScat
+m.intmandrop <- update(m.intman, . ~ . - SEScat5 - SEScat6 - SEScat7 - SEScat8)
+
+
+## ----results = "asis"---------------------------------------------------------
+knitr::kable(
+  t(modelCompare(m.intmandrop, m.intman)$Comparison),
+  caption = "manual model comparison")
+
+## ----results = "asis"---------------------------------------------------------
+knitr::kable(APAStyler(modelTest(m.intman)))
+
+## ----results = "asis"---------------------------------------------------------
+m.cint <- lmer(PosAff ~ STRESS * NegAff + (1 | UserID), data = aces_daily)
+
+knitr::kable(APAStyler(modelTest(m.cint)))
 

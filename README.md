@@ -2,11 +2,11 @@ multilevelTools
 ===============
 
 <!-- badges: start -->
-[![Build
-Status](https://travis-ci.com/JWiley/multilevelTools.svg?branch=master)](https://travis-ci.com/JWiley/multilevelTools)
-[![Codecov test coverage](https://codecov.io/gh/JWiley/multilevelTools/branch/master/graph/badge.svg)](https://codecov.io/gh/JWiley/multilevelTools?branch=master)
+[![CRAN_status](https://www.r-pkg.org/badges/version/multilevelTools)](https://cran.r-project.org/package=multilevelTools)
+[![R-CMD-check.yaml](https://github.com/JWiley/multilevelTools/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/JWiley/multilevelTools/actions/workflows/check-standard.yaml)
+[![codecov](https://codecov.io/gh/JWiley/multilevelTools/graph/badge.svg?token=HK1Ns92mfB)](https://app.codecov.io/gh/JWiley/multilevelTools)
+[![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
-
 
 Effect sizes, diagnostics and performance metrics for
 multilevel and mixed effects models.

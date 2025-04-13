@@ -1,3 +1,37 @@
+# multilevelTools 0.2.0
+
+## New Features
+* `evaluateLags()` function to evaluate how far back lags should go to improve model fit.
+* `ranefdata()` function to extract random effects from a `brms` model and
+     return and plot them. Designed to make caterpilar plots with posterior summaries.
+
+## Changes
+
+* Moved testthat to 3rd edition.
+* Updated GitHub actions
+
+# multilevelTools 0.1.3
+
+## Bug Fixes
+
+* `modelTest()` no longer fails for models with a continuous x categorical interaction.
+  Estimates for dropping the "simple" effect of the continuous variable are still 
+  not calculable, but the rest of the calculations are still performed and that line
+  is simply set to NA.
+  
+## Changes
+
+* moved to testthat 3rd edition
+* moved CI to GitHub actions
+* use preferably for package website
+
+# multilevelTools 0.1.2
+
+## New Features
+
+* New `weighted.sma` function to calculate weighted simple 
+  moving averages.
+
 # multilevelTools 0.1.1
 
 ## New Features
