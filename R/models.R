@@ -10,7 +10,7 @@
 #' @param id A character string giving the name of the variable that
 #'  indicates which rows of the dataset belong to the same person
 #'  or group for the multilevel analysis.
-#' @param data A data table or data frame to be used for analysis.
+#' @param data A \code{data.table} or \code{data.frame} to be used for analysis.
 #' @param savemodel A logical value indicating whether the underlying model
 #'  should be saved and returned. Defaults to \code{FALSE}.
 #' @return a list with two elements, the first, \dQuote{Results} contains the
@@ -23,7 +23,6 @@
 #' @export
 #' @importFrom lavaan sem parameterEstimates
 #' @examples
-#'
 #'   data(aces_daily, package = "JWileymisc")
 #'   omegaSEM(
 #'     items = c("COPEPrb", "COPEPrc", "COPEExp"),
@@ -167,21 +166,19 @@ paste(rlabels.between, collapse = " + "))
 #'   if \code{CLUSTER = FALSE}, otherwise, a data table with the pseudo R2
 #'   for each cluster unit.
 #'  A list with a \code{data.table} with the following elements:
-#'   \describe{
-#'   \item{Model}{A character string indicating the model type, here merMod}
-#'   \item{Estimator}{A character string indicating whether the model was estimated with REML or ML}
-#'   \item{N_Obs}{The number of observations}
-#'   \item{N_Groups}{A character string indicating the number of unique units in each grouping/clustering variable.}
-#'   \item{AIC}{Akaike Information Criterion}
-#'   \item{BIC}{Bayesian Information Criterion}
-#'   \item{LL}{log likelihood}
-#'   \item{LLDF}{log likelihood degrees of freedom}
-#'   \item{Sigma}{Residual standard deviation}
-#'   \item{MarginalR2}{in sample variance explained by the fixed effects}
-#'   \item{ConditionalR2}{in sample variance explained by the fixed and random effects}
-#'   \item{MarginalF2}{Cohen's F2 effect size R2 / (1 - R2) based off the Marginal R2}
-#'   \item{ConditionalF2}{Cohen's F2 effect size R2 / (1 - R2) based off the Conditional R2}
-#'   }
+#'  - Model: A character string indicating the model type, here merMod
+#'  - Estimator: A character string indicating whether the model was estimated with REML or ML
+#'  - N_Obs: The number of observations
+#'  - N_Groups: A character string indicating the number of unique units in each grouping/clustering variable.
+#'  - AIC: Akaike Information Criterion
+#'  - BIC: Bayesian Information Criterion
+#'  - LL: log likelihood
+#'  - LLDF: log likelihood degrees of freedom
+#'  - Sigma: Residual standard deviation
+#'  - MarginalR2: in sample variance explained by the fixed effects
+#'  - ConditionalR2: in sample variance explained by the fixed and random effects
+#'  - MarginalF2: Cohen's F2 effect size R2 / (1 - R2) based off the Marginal R2
+#'  - ConditionalF2: Cohen's F2 effect size R2 / (1 - R2) based off the Conditional R2
 #' @examples
 #'
 #' library(JWileymisc)
@@ -318,8 +315,8 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("Estimator", "N_Groups",
 #' This function provides fit statistics and effect sizes for
 #' model comparisons.  The models must be nested.
 #'
-#' @param model1 A model estimated by \code{lmer}.
-#' @param model2 A model estimated by \code{lmer}.
+#' @param model1 A model estimated by \code{\link[lme4]{lmer}}.
+#' @param model2 A model estimated by \code{\link[lme4]{lmer}}.
 #' @param ... Additional arguments, not currently used but included to match generic.
 #' @return a data table with the fit indices for each model
 #' and comparing models to each other.
@@ -431,13 +428,13 @@ if(getRversion() >= "2.15.1") utils::globalVariables(c("var1", "var2", "sdcor", 
 
 #' estimate detailed results per variable and effect sizes for both fixed and random effects from lmer models
 #'
-#' This function extends the current \code{drop1} method for
+#' This function extends the current \code{\link[stats]{drop1}} method for
 #' \code{merMod} class objects from the lme4 package. Where
 #' the default method to be able to drop both fixed and random
 #' effects at once.
 #'
-#' At the moment, the function is aimed to \code{lmer} models
-#' and has very few features for \code{glmer} or \code{nlmer}
+#' At the moment, the function is aimed to \code{\link[lme4]{lmer}} models
+#' and has very few features for \code{\link[lme4]{glmer}} or \code{\link[lme4]{nlmer}}
 #' models. The primary motivation was to provide a way to
 #' provide an overall test of whether a variable
 #' \dQuote{matters}.  In multilevel data, a variable may be
@@ -455,9 +452,9 @@ if(getRversion() >= "2.15.1") utils::globalVariables(c("var1", "var2", "sdcor", 
 #' mixed effects models do not accomodate all types of models. For example,
 #' if a model includes only a random slope with no random intercept,
 #' if the random slope was dropped, there would be no more random effects,
-#' and at that point, \code{lmer} or \code{glmer} will not run the model.
+#' and at that point, \code{\link[lme4]{lmer}} or \code{\link[lme4]{glmer}} will not run the model.
 #' It is theoretically possible to instead fit the model using
-#' \code{lm} or \code{glm} but this becomes more complex for certain
+#' \code{\link[stats]{lm}} or \code{\link[stats]{glm}} but this becomes more complex for certain
 #' model comparisons and calculations and is not currently implemented.
 #' Marginal and conditional R2 values are calculated for each term,
 #' and these are used also to calculate something akin to an
@@ -476,18 +473,19 @@ if(getRversion() >= "2.15.1") utils::globalVariables(c("var1", "var2", "sdcor", 
 #' main effect but keeping the interaction term, so present
 #' and interpret these with caution.
 #'
-#' @param object A \code{merMod} class object, the fitted result of
-#'   \code{lmer}.
+#' @param object A \code{link[lme4]{merMod-class}} object, the fitted result of
+#'   \code{\link[lme4]{lmer}}.
 #' @param method A character vector indicating the types of confidence
 #'   intervals to calculate. One of \dQuote{Wald}, \dQuote{profile}, or
 #'   \dQuote{boot}.
-#' @param control A \code{lmerControl()} results used to control how
+#' @param control A \code{\link[lme4]{lmerControl}} results used to control how
 #'   models are estimated when updating.
 #' @param ... Additional arguments passed to \code{confint}
 #' @importFrom JWileymisc modelTest as.na as.modelTest
 #' @importFrom data.table as.data.table := setnames
-#' @importFrom lme4 isGLMM isNLMM isLMM isREML nobars findbars
+#' @importFrom lme4 isGLMM isNLMM isLMM isREML
 #' @importFrom lme4 ngrps lmer glmer refitML lmerControl glmerControl
+#' @importFrom reformulas nobars findbars
 #' @importFrom stats family formula nobs update
 #' @importFrom lmerTest lsmeansLT
 #' @method modelTest merMod
@@ -496,7 +494,7 @@ if(getRversion() >= "2.15.1") utils::globalVariables(c("var1", "var2", "sdcor", 
 #' ## these examples are slow to run
 #' library(JWileymisc)
 #' m1 <- lme4::lmer(extra ~ group + (1 | ID),
-#' data = sleep, REML=FALSE)
+#'   data = sleep, REML = FALSE)
 #' modelTest(m1)
 #'
 #' \donttest{
@@ -749,7 +747,7 @@ modelTest.merMod <- function(object, method = c("Wald", "profile", "boot"), cont
 #'
 #' Currently only linear mixed effects models are allowed.
 #'
-#' @param formula A \code{character} string giving the \code{lmer()} formula
+#' @param formula A \code{character} string giving the \code{\link[lme4]{lmer}} formula
 #'   to use as a base. The variable to be tested with lags gets added as fixed effects
 #'   only to this, currently.
 #' @param lagvar A \code{character} string giving the name of the variable to test lags for.

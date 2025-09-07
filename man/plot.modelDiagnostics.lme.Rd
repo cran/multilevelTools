@@ -2,17 +2,17 @@
 % Please edit documentation in R/plotting.R
 \name{plot.modelDiagnostics.lme}
 \alias{plot.modelDiagnostics.lme}
-\title{Plot Diagnostics for an lme model}
+\title{Plot Diagnostics for an \code{\link[nlme]{lme}} model}
 \usage{
 \method{plot}{modelDiagnostics.lme}(x, y, plot = TRUE, ask = TRUE, ncol = 1, nrow = 1, ...)
 }
 \arguments{
-\item{x}{A fitted model object from \code{lme()}.}
+\item{x}{A fitted model object from \code{\link[nlme]{lme}}.}
 
 \item{y}{Included to match the generic. Not used.}
 
 \item{plot}{A logical value whether or not to plot the results or
-simply return the graaphical  objects.}
+simply return the graphical objects.}
 
 \item{ask}{A logical whether to ask before changing plots.
 Only applies to interactive environments.}

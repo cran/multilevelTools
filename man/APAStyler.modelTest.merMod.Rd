@@ -18,7 +18,7 @@
 \item{object}{A list of one (or more) models estimated from lmer}
 
 \item{format}{A list giving the formatting style to be used for
-the fixed effecvts, random effects, and effect sizes.
+the fixed effects, random effects, and effect sizes.
 For the random effects, must be two options, one for when the
 random effects do not have confidence intervals and one when the
 random effects do have confidence intervals.}
@@ -30,7 +30,7 @@ APA style).}
 
 \item{pcontrol}{A list controlling how p values are formatted.}
 
-\item{...}{Additional arguments passed to \code{confint}. Notably
+\item{...}{Additional arguments passed to \code{\link[stats]{confint}}. Notably
 \code{nsim} and \code{boot.type} if the bootstrap method is used.}
 }
 \value{
